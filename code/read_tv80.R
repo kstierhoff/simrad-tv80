@@ -22,14 +22,14 @@ read_tv80_msg <- function(file) {
   file.name <- path_file(as_fs_path(file))
   
   # Read and format CSV file data
-  df <- read_delim(file, delim = ";", name_repair = "minimal", lazy = FALSE) %>%
-    select(which(!duplicated(names(.)))) %>%
-    mutate(VES_Latitude = as.numeric(str_sub(VES_Latitude,1,2)) +
-             as.numeric(str_sub(VES_Latitude,4,11))/60,
-           VES_Longitude = as.numeric(str_sub(VES_Longitude,1,3)) +
-             as.numeric(str_sub(VES_Longitude,5,12))/60) %>%
-    mutate_if(is.character, as.numeric) %>%
-    mutate(datetime = ymd_hms(DateTime),
+  df <- readr::read_delim(file, delim = ";", name_repair = "minimal", lazy = FALSE) %>%
+    dplyr::select(which(!duplicated(names(.)))) %>%
+    dplyr::mutate(VES_Latitude = as.numeric(stringr::str_sub(VES_Latitude,1,2)) +
+             as.numeric(stringr::str_sub(VES_Latitude,4,11))/60,
+           VES_Longitude = as.numeric(stringr::str_sub(VES_Longitude,1,3)) +
+             as.numeric(stringr::str_sub(VES_Longitude,5,12))/60) %>%
+    dplyr::mutate_if(is.character, as.numeric) %>%
+    dplyr::mutate(datetime = lubridate::ymd_hms(DateTime),
            file = file.name)
   
   return(df)
